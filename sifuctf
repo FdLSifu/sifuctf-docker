@@ -1,0 +1,10 @@
+#!/bin/bash
+# Check if container is launched
+if [[ -z $(docker container ls -a | grep sifuctf) ]]
+then
+    # launch container 
+    alacritty -e docker run --rm --name sifuctf -it sifuctf &
+else
+    # attach to existing container 
+    alacritty -e docker exec -it sifuctf tmux att &
+fi
