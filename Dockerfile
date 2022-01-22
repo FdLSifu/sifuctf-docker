@@ -6,14 +6,16 @@ RUN apt update && \
     apt install -y --no-install-recommends \
         build-essential \
         binwalk \
-        firefox-esr \
         curl \
+        firefox-esr \
         gdb \
         git \
         htop \
-        ipython3 \
+        ipython3 \ 
         iputils-ping \
         jupyter-notebook \
+        libegl1 \
+        libpci3 \
         nmap \
         openjdk-11-jdk \
         procps \
