@@ -28,10 +28,10 @@ RUN apt update && \
 # Python packages
 RUN pip install pwntools numpy matplotlib scipy 
 
+# User $DOCKER_USER
 ENV DOCKER_USER="sifuctf"
 ENV DOCKER_HOME="/home/"$DOCKER_USER
-# User $DOCKER_USER
-RUN groupadd -r $DOCKER_USER && useradd -m -r -g $DOCKER_USER $DOCKER_USER
+RUN groupadd -r -g 1000 $DOCKER_USER && useradd -u 1000 -m -r -g 1000 $DOCKER_USER
 RUN chsh -s /bin/zsh $DOCKER_USER
 USER $DOCKER_USER
 

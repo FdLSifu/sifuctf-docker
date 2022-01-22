@@ -1,10 +1,12 @@
 #!/bin/bash
 # Check if container is launched
+CTF_DIR=/home/fdlsifu/Documents/tools/sifuctf/ctf
 if [[ -z $(docker container ls -a | grep sifuctf) ]]
 then
     # launch container 
-    alacritty -e docker run --rm -v ctf:/home/sifuctf/ctf --name sifuctf -it sifuctf &
+    xhost +
+    alacritty -e docker run --rm -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=:0 -v /dev/shm:/dev/shm --device /dev/dri --mount type=bind,source=$CTF_DIR,target=/home/sifuctf/ctf --name sifuctf --user root -it sifuctf bash -c "chown sifuctf:sifuctf /home/sifuctf/ctf; su - sifuctf /bin/zsh -c tmux" &
 else
     # attach to existing container 
-    alacritty -e docker exec -it sifuctf tmux att &
+    alacritty -e docker exec --user sifuctf -it sifuctf tmux att &
 fi
