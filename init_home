@@ -1,0 +1,43 @@
+#!/bin/bash
+CTF_DIR="/home/fdlsifu/Documents/tools/sifuctf/home"
+TOOLS_DIR="/opt/tools"
+
+install() {
+    mkdir -p $CTF_DIR/.local/bin
+
+    echo Run the following commands inside a container too install oh-my-zsh
+    echo ""
+    echo '> sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"'
+    echo '> sed -i "s/ZSH_THEME=\"robbyrussell\"/ZSH_THEME=\"mh-custom\"/g" $CTF_DIR/.zshrc'
+
+    echo "PATH=$CTF_DIR/.local/bin:$PATH" >> $CTF_DIR/.zshrc
+
+    # conf
+    cp files/vimrc $CTF_DIR/.vimrc
+    mkdir -p $CTF_DIR/.oh-my-zsh/themes/
+    cp files/mh-custom.zsh-theme $CTF_DIR/.oh-my-zsh/themes/
+
+    # peda
+    echo "source $TOOLS_DIR/peda/peda.py" >> $CTF_DIR/.gdbinit
+
+    # fix colors for sage
+    mkdir -p $CTF_DIR/.sage
+    echo "%colors Linux" > $CTF_DIR/.sage/init.sage
+}
+
+if [ -d "$CTF_DIR" ]
+then
+    if [ "$(/bin/ls -A $CTF_DIR)" ]; then
+        echo -n "WARNING: $CTF_DIR is not empty. Do you really want to continue ? (y/N) "
+        read ans
+        if [[ $ans != "y" ]]
+        then
+            echo "exit"
+            exit
+        fi
+    fi
+    install
+else
+    echo "Directory $CTF_DIR not found."
+fi
+
