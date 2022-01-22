@@ -3,7 +3,7 @@
 if [[ -z $(docker container ls -a | grep sifuctf) ]]
 then
     # launch container 
-    alacritty -e docker run --rm --name sifuctf -it sifuctf &
+    alacritty -e docker run --rm -v ctf:/home/sifuctf/ctf --name sifuctf -it sifuctf &
 else
     # attach to existing container 
     alacritty -e docker exec -it sifuctf tmux att &
