@@ -3,10 +3,10 @@ FROM debian:stable-slim
 # Packages
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt update && \
-    apt install -y \
+    apt install -y --no-install-recommends \
         build-essential \
         binwalk \
-        chromium \
+        firefox-esr \
         curl \
         gdb \
         git \
@@ -70,8 +70,6 @@ java -jar $TOOLS_DIR/burp.jar > /dev/null 2>&1 & \n" > /usr/local/bin/burpsuite 
 RUN wget -qO- https://raw.githubusercontent.com/zaproxy/zap-admin/master/ZapVersions.xml | xmlstarlet sel -t -v //url |grep -i Linux | wget --content-disposition -i - -O - | tar zxv && \
     mv ZAP* $TOOLS_DIR
 RUN ln -s $TOOLS_DIR/ZAP*/zap.sh /usr/local/bin/zap && chmod +x /usr/local/bin/zap
-
-# add proxy for burp/zap
 
 # Python packages
 RUN pip install pwntools numpy matplotlib scipy pycryptodome 
