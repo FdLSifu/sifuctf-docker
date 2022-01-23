@@ -6,14 +6,16 @@ CTF_DIR=/home/fdlsifu/Documents/tools/sifuctf/home
 if [ -t 0 ];
 then
     EXTERM=""
+    BG=""
 else
     EXTERM="alacritty -e"
+    BG="&"
 fi
 
 if [[ $TMUX ]]
 then
-    tmux detach
     EXTERM="alacritty -e"
+    BG=""
 fi
 
 if [[ -z $(docker container ls -a | grep sifuctf) ]]
@@ -28,7 +30,7 @@ then
         --mount type=bind,source=$CTF_DIR,target=/home/sifuctf/ \
         --hostname sifuctf --name sifuctf --user sifuctf \
         -it sifuctf \
-        bash -c "cd && /bin/zsh -c tmux" &
+        bash -c "cd && /bin/zsh -c tmux" $BG
 else
     # attach to existing container 
     $EXTERM docker exec --user sifuctf -it sifuctf tmux att &
