@@ -10,6 +10,12 @@ else
     EXTERM="alacritty -e"
 fi
 
+if [[ $TMUX ]]
+then
+    tmux detach
+    EXTERM="alacritty -e"
+fi
+
 if [[ -z $(docker container ls -a | grep sifuctf) ]]
 then
     # launch container 
@@ -22,8 +28,8 @@ then
         --mount type=bind,source=$CTF_DIR,target=/home/sifuctf/ \
         --hostname sifuctf --name sifuctf --user sifuctf \
         -it sifuctf \
-        bash -c "cd && /bin/zsh -c tmux" 
+        bash -c "cd && /bin/zsh -c tmux" &
 else
     # attach to existing container 
-    $EXTERM docker exec --user sifuctf -it sifuctf tmux att 
+    $EXTERM docker exec --user sifuctf -it sifuctf tmux att &
 fi
