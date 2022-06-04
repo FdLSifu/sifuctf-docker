@@ -4,23 +4,35 @@ FROM debian:stable-slim
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt update && \
     apt install -y --no-install-recommends \
+        apulse \
         build-essential \
         binwalk \
+        bsdextrautils \
         curl \
+        file \
         firefox-esr \
         gdb \
         git \
+        gnupg \
+        hexchat \
+        hexyl \
         htop \
+        iproute2 \
         ipython3 \ 
         iputils-ping \
         jupyter-notebook \
         libegl1 \
         libpci3 \
+        mlocate \
+        netcat \
         nmap \
         openjdk-11-jdk \
+        openssh-client \
+        php \
         procps \
         python3-pip \
         sagemath \
+        socat \
         sudo \
         tmux \
         tzdata \
@@ -37,7 +49,7 @@ RUN apt update && \
 # User $DOCKER_USER
 ENV DOCKER_USER="sifuctf"
 ENV DOCKER_HOME="/home/"$DOCKER_USER
-RUN groupadd -r -g 1000 $DOCKER_USER && useradd -u 1000 -m -r -g 1000 $DOCKER_USER
+RUN groupadd -r -g 1000 $DOCKER_USER && useradd -u 1000 -m -r -g 1000 -G audio $DOCKER_USER
 RUN echo "$DOCKER_USER:$DOCKER_USER" | chpasswd
 RUN chsh -s /bin/zsh $DOCKER_USER
 RUN echo "$DOCKER_USER ALL=(ALL:ALL) ALL" >> /etc/sudoers
@@ -46,7 +58,7 @@ RUN echo "$DOCKER_USER ALL=(ALL:ALL) ALL" >> /etc/sudoers
 COPY files/tmux.conf /etc/
 
 ENV TOOLS_DIR="/opt/tools"
-RUN mkdir TOOLS_DIR
+RUN mkdir -p $TOOLS_DIR
 # gdb peda
 RUN git clone https://github.com/longld/peda.git $TOOLS_DIR/peda
 

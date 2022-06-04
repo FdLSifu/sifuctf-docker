@@ -8,29 +8,45 @@ then
     EXTERM=""
     BG=""
 else
-    EXTERM="alacritty -e"
+    EXTERM="kitty -e"
     BG="&"
 fi
 
 if [[ $TMUX ]]
 then
-    EXTERM="alacritty -e"
+    EXTERM="kitty -e"
     BG=""
 fi
 
 if [[ -z $(docker container ls -a | grep sifuctf) ]]
 then
     # launch container 
-    xhost +
-
-    $EXTERM docker run \
-        --rm \
-        -v /dev/shm:/dev/shm \
-        -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=:0 --device /dev/dri \
-        --mount type=bind,source=$CTF_DIR,target=/home/sifuctf/ \
-        --hostname sifuctf --name sifuctf --user sifuctf \
-        -it sifuctf \
-        bash -c "cd && /bin/zsh -c tmux" $BG
+    if [[ -n $WAYLAND_DISPLAY ]]; then
+        xhost +
+        $EXTERM docker run \
+            --rm \
+            -v /dev/shm:/dev/shm \
+            -e XDG_RUNTIME_DIR=/tmp \
+            -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=:0 --device /dev/dri \
+            -e WAYLAND_DISPLAY=$WAYLAND_DISPLAY --device /dev/dri \
+            -v $XDG_RUNTIME_DIR/$WAYLAND_DISPLAY:/tmp/$WAYLAND_DISPLAY \
+            --mount type=bind,source=$CTF_DIR,target=/home/sifuctf/ \
+            --hostname sifuctf --name sifuctf --user sifuctf \
+            -it sifuctf \
+            bash -c "cd && /bin/zsh -c tmux" $BG
+    else
+        xhost +
+        $EXTERM docker run \
+            --rm \
+            -e XDG_RUNTIME_DIR=/tmp \
+            -v /dev/shm:/dev/shm \
+            -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=:0 --device /dev/dri \
+            --mount type=bind,source=$CTF_DIR,target=/home/sifuctf/ \
+            --device /dev/snd \
+            --hostname sifuctf --name sifuctf --user sifuctf \
+            -it sifuctf \
+            bash -c "cd && /bin/zsh -c tmux" $BG
+    fi
 else
     # attach to existing container 
     $EXTERM docker exec --user sifuctf -it sifuctf tmux att &
