@@ -69,9 +69,9 @@ RUN rm $TOOLS_DIR/ghidra.zip
 RUN ln -s $TOOLS_DIR/ghidra_10.1.1_PUBLIC/ghidraRun /usr/local/bin
 
 # radare2
-RUN wget -O /tmp/radare2.deb https://github.com/radareorg/radare2/releases/download/5.5.4/radare2_5.5.4_amd64.deb 
-RUN dpkg -i /tmp/radare2.deb
-RUN rm /tmp/radare2.deb
+RUN git clone https://github.com/radareorg/radare2 /tmp/radare2
+RUN /tmp/radare2/sys/install.sh
+RUN rm -rfd /tmp/radare2
 
 # burp suite
 RUN wget -O $TOOLS_DIR/burp.jar 'https://portswigger.net/DownloadUpdate.ashx?Product=Free' \
@@ -86,6 +86,7 @@ RUN wget -qO- https://raw.githubusercontent.com/zaproxy/zap-admin/master/ZapVers
 RUN ln -s $TOOLS_DIR/ZAP*/zap.sh /usr/local/bin/zap && chmod +x /usr/local/bin/zap
 
 # Python packages
-RUN pip install pwntools numpy matplotlib scipy pycryptodome 
+RUN pip install numpy matplotlib scipy pycryptodome 
+# RUN pip install pwntools numpy matplotlib scipy pycryptodome 
 
 ENV TZ="Europe/Paris"
